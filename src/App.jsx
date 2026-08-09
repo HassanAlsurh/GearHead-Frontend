@@ -8,6 +8,7 @@ import Home from "./pages/Home"
 import VehicleForm from "./pages/VehicleForm"
 import './App.css'
 import Index from "./pages/Index"
+import * as vehicleServices from './services/vehicles'
 
 const getUserFromToken = () => {
   const token = localStorage.getItem('token')
@@ -20,6 +21,19 @@ const App = () => {
 
   const [user, setUser] = useState(getUserFromToken())
 
+  const handleUpdateVehicle = async (vehicleId, formDate) => {
+    const updatedVehicle = await vehicleServices.update(vehicleId, formDate)
+    //set the state with the new data of the vehicle!
+    navigate(`/vehicles/${vehicleId}`)
+  }
+  const handleAddVehicle = async (formDate) => {
+    console.log(formDate, 'in the  handle add vehcile');
+    
+    const newVehicle = await vehicleServices.create(formDate)
+    //set the state for the index page with the new vehicle
+    navigate('/vehicles')
+  }
+
   return (
     <div>
       <Nav user={user} setUser={setUser} />
@@ -28,9 +42,9 @@ const App = () => {
           <Route path='/' element={user ? <Home user={user} /> : <Landing />} />
           {user ? (
             <>
-                {/* Routes that only Signed in users can access */}
-                <Route path='/vehicles' element={<Index />} />
-                <Route path='/vehicles/new' element={<VehicleForm />} />
+              {/* Routes that only Signed in users can access */}
+              <Route path='/vehicles' element={<Index />} />
+              <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
             </>
           ) : (
             <>

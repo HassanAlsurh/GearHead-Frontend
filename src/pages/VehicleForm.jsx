@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { show } from '../services/vehicles'
-const VehicleForm = () => {
+const VehicleForm = ({handleUpdateVehicle, handleAddVehicle}) => {
 
-      const { vehicleId } = useParams()
+    const { vehicleId } = useParams()
 
     const initialState = {
         year: undefined,
@@ -20,9 +20,13 @@ const VehicleForm = () => {
     }
 
     const handleSubmit = (event) => {
-        evt.preventDefault()
+        event.preventDefault()
 
-        // handle Submit here
+        if (vehicleId) {
+            handleUpdateVehicle(vehicleId, formData)
+        } else {
+            handleAddVehicle(formData)
+        }
 
         setFormData(initialState)
 
@@ -38,7 +42,7 @@ const VehicleForm = () => {
 
     return (
         <main className='card'>
-            <h1>{vehicleId ? 'Edit Vehicle' : 'New Vehicle' }</h1>
+            <h1>{vehicleId ? 'Edit Vehicle' : 'New Vehicle'}</h1>
 
             <form onSubmit={handleSubmit}>
                 <label htmlFor='make-input'>Make</label>
@@ -62,7 +66,8 @@ const VehicleForm = () => {
                 <label htmlFor='year-input'>Year</label>
                 <input
                     required
-                    min={0}
+                    min={1900}
+                    max={2027} //for now 
                     type='number'
                     name='year'
                     id='year-input'
@@ -81,7 +86,6 @@ const VehicleForm = () => {
                 />
                 <label htmlFor='image-input'>Image</label>
                 <input
-                    required
                     type='text'
                     name='image'
                     id='image-input'
