@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router"
+import { useParams, useNavigate, data } from "react-router"
 import { useState, useEffect } from "react"
 import * as vehicleservices from '../services/vehicles'
 const VehicleDetails = () => {
@@ -34,6 +34,20 @@ const VehicleDetails = () => {
     const handleSubmit = (event) => {
         console.log('submit')
     }
+    const handleSetFormData = (recordId) => {
+        console.log('Hello World', recordId);
+
+        const valueOfRecord = vehicle.serviceRecords.find((currVehicle) => {
+            return currVehicle._id === recordId
+        })
+
+        console.log(valueOfRecord, '<<<<<<<<<<<<<<<<<<<<<<< value of record');
+
+        const formattedDate = valueOfRecord.date.split('T')[0];
+
+        setFormData({...valueOfRecord, date: formattedDate})
+        
+    }
 
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
 
@@ -44,7 +58,6 @@ const VehicleDetails = () => {
                 <button popovertarget="serviceForm">trigger Popover</button>
 
                 <div popover='auto' id="serviceForm">
-
                     <form onSubmit={handleSubmit}>
                         <label htmlFor='date-input'>Date</label>
                         <input
@@ -98,7 +111,6 @@ const VehicleDetails = () => {
                         />
                         <button type='submit'>SUBMIT</button>
                     </form>
-
                 </div>
             </div>
             <div className="service-records">
@@ -106,6 +118,7 @@ const VehicleDetails = () => {
                     vehicle.serviceRecords.map((service) => (
                         <>
                             <h1>a record</h1>
+                            <button popovertarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
                         </>
                     ))
                 }
