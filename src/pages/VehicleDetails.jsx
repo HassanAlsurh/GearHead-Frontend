@@ -1,12 +1,12 @@
 import { useParams, useNavigate, data } from "react-router"
 import { useState, useEffect } from "react"
 import * as vehicleservices from '../services/vehicles'
+import * as recordsServices from '../services/serviceRecords'
 const VehicleDetails = () => {
 
     const navigate = useNavigate()
 
     const { vehicleId } = useParams()
-    console.log(vehicleId);
 
     const [vehicle, setVehicle] = useState(null)
 
@@ -19,34 +19,55 @@ const VehicleDetails = () => {
     }, [vehicleId])
 
     const initialState = {
-        date: undefined,
-        category: undefined,
-        description: undefined,
-        cost: undefined,
-        mileageAtService: undefined
+        date: '',
+        category: 'Maintenance',
+        description: '',
+        cost: '',
+        mileageAtService: ''
     }
 
     const [formData, setFormData] = useState(initialState)
 
-    const handleChange = (event) => {
-        console.log('change');
-    }
-    const handleSubmit = (event) => {
-        console.log('submit')
-    }
-    const handleSetFormData = (recordId) => {
-        console.log('Hello World', recordId);
+    const [toEdit, setToEdit] = useState(null)
 
+    const handleSetFormData = (recordId) => {
         const valueOfRecord = vehicle.serviceRecords.find((currVehicle) => {
             return currVehicle._id === recordId
         })
 
-        console.log(valueOfRecord, '<<<<<<<<<<<<<<<<<<<<<<< value of record');
-
         const formattedDate = valueOfRecord.date.split('T')[0];
 
-        setFormData({...valueOfRecord, date: formattedDate})
-        
+        setFormData({ ...valueOfRecord, date: formattedDate })
+        setToEdit(recordId)
+    }
+
+    const handleChange = (event) => {
+        setFormData({ ...formData, [event.target.name]: event.target.value })
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        if (toEdit) {
+            // handleUpdateVehicle(vehicleId, formData)
+            handleUpdateRecord(vehicleId, toEdit, formData)
+        } else {
+            // handleAddVehicle(formData)
+            handleAddRecord(vehicleId, formData)
+        }
+
+        setFormData(initialState)
+        setToEdit(null)
+        console.log('formData: ', formData);
+        console.log('toEdit: ', toEdit);
+
+    }
+
+    const handleAddRecord = (vehicleId, formData) => {
+        recordsServices.create(vehicleId, formData)
+    }
+    const handleUpdateRecord = (vehicleId, toEdit, formData) => {
+        recordsServices.update(vehicleId, toEdit, formData)
     }
 
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
@@ -65,6 +86,7 @@ const VehicleDetails = () => {
                             type='date'
                             name='date'
                             id='date-input'
+                            placeholder=""
                             value={formData.date}
                             onChange={handleChange}
                         />
