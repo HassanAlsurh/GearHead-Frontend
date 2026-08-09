@@ -4,7 +4,10 @@ import Nav from "./components/Nav"
 import SignUpForm from "./pages/SignUpForm"
 import SignInForm from "./pages/SignInForm"
 import Landing from "./pages/Landing"
+import Home from "./pages/Home"
+import VehicleForm from "./pages/VehicleForm"
 import './App.css'
+import Index from "./pages/Index"
 
 const getUserFromToken = () => {
   const token = localStorage.getItem('token')
@@ -22,10 +25,12 @@ const App = () => {
       <Nav user={user} setUser={setUser} />
       <main className="app-main">
         <Routes>
-          <Route path='/' element={user ? <Dashboard user={user} /> : <Landing />} />
+          <Route path='/' element={user ? <Home user={user} /> : <Landing />} />
           {user ? (
             <>
                 {/* Routes that only Signed in users can access */}
+                <Route path='/vehicles' element={<Index />} />
+                <Route path='/vehicles/new' element={<VehicleForm />} />
             </>
           ) : (
             <>
