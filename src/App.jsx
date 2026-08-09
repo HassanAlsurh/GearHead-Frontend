@@ -20,18 +20,30 @@ const App = () => {
   const navigate = useNavigate()
 
   const [user, setUser] = useState(getUserFromToken())
+  const [vehicles, setVehicles] = useState([])
+
+  useEffect(() => {
+    const fetchAllVehicles = async () => {
+      const vehiclesData = await vehicleServices.index()
+      setVehicles(vehiclesData)
+    }
+    if (user) fetchAllVehicles()
+  }, [user])
+
+  const handleAddVehicle = async (formDate) => {
+    const newVehicle = await vehicleServices.create(formDate)
+    setVehicles([...vehicles, newVehicle])
+    navigate('/vehicles')
+  }
 
   const handleUpdateVehicle = async (vehicleId, formDate) => {
     const updatedVehicle = await vehicleServices.update(vehicleId, formDate)
     //set the state with the new data of the vehicle!
+    const updatedVehiclesList = vehicles.map((vehicle) => {
+      return vehicleId === vehicle._id ? updatedVehicle : vehicle
+    })
+    setVehicles(updatedVehiclesList)
     navigate(`/vehicles/${vehicleId}`)
-  }
-  const handleAddVehicle = async (formDate) => {
-    console.log(formDate, 'in the  handle add vehcile');
-    
-    const newVehicle = await vehicleServices.create(formDate)
-    //set the state for the index page with the new vehicle
-    navigate('/vehicles')
   }
 
   return (
@@ -43,7 +55,7 @@ const App = () => {
           {user ? (
             <>
               {/* Routes that only Signed in users can access */}
-              <Route path='/vehicles' element={<Index />} />
+              <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
             </>
           ) : (
