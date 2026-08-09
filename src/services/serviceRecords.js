@@ -22,6 +22,27 @@ const create = async (vehicleId, recordData) => {
 
 // app.put('/vehicles/:vehicleId/service-records/:recordId', verifyToken, serviceCtrl.update)
 
+async function update(vehicleId, recordId, recordData) {
+    try {
+        const res = await fetch(`${BASE_URL}/${vehicleId}/service-records/${recordId}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(recordData),
+        })
+        return res.json()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// app.delete('/vehicles/:vehicleId/service-records/:recordId', verifyToken, serviceCtrl.deleteRecord)
+
+
+
 export {
     create,
+    update,
 }
