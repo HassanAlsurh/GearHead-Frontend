@@ -40,9 +40,22 @@ async function update(vehicleId, recordId, recordData) {
 
 // app.delete('/vehicles/:vehicleId/service-records/:recordId', verifyToken, serviceCtrl.deleteRecord)
 
-
+const deleteRecord = async (vehicleId, recordId) => {
+    try {
+        const res = await fetch(`${BASE_URL}/${vehicleId}/service-records/${recordId}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+        return res.json();
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export {
     create,
     update,
+    deleteRecord,
 }
