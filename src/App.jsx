@@ -9,12 +9,16 @@ import VehicleForm from "./pages/VehicleForm"
 import './App.css'
 import Index from "./pages/Index"
 import * as vehicleServices from './services/vehicles'
+import VehicleDetails from "./pages/vehicleDetails"
+
 
 const getUserFromToken = () => {
   const token = localStorage.getItem('token')
   if (!token) return null
   return JSON.parse(atob(token.split('.')[1])).payload
 }
+
+
 
 const App = () => {
   const navigate = useNavigate()
@@ -57,6 +61,7 @@ const App = () => {
               {/* Routes that only Signed in users can access */}
               <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
+              <Route path='/vehicles/:vehicleId' element={<VehicleDetails />} />
             </>
           ) : (
             <>
