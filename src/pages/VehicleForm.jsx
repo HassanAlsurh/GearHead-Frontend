@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
-import { show } from '../services/vehicles'
 import * as vehicleService from '../services/vehicles'
 
 import { Alert, Button, Card, Form, Input, Select, InputNumber } from 'antd'
@@ -136,7 +135,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     ]}
                 >
                     <InputNumber
-                        addonAfter="km"
+                        suffix="km" // addonAfter is deprecated
                         min={0}
                         step={1}
                         placeholder="0"
@@ -163,7 +162,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     loading={isSubmitting}
                     block
                 >
-                    Add Vehicle
+                    {vehicleId ? 'Update Vehicle' : 'Add Vehicle'}
                 </Button>
 
             </Form>

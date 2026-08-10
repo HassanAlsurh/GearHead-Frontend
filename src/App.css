@@ -173,3 +173,26 @@ button:disabled {
   align-items: center;
   margin-bottom: 24px;
 }
+
+.form-card {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.form-card .ant-card-head {
+  background-color: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  border-radius: 12px 12px 0 0;
+  font-size: 1.25rem;
+}
+
+.form-alert {
+  margin-bottom: 24px;
+}
+
+.form-input-number {
+  width: 100%;
+}

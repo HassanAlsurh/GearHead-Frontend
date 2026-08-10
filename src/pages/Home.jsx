@@ -27,7 +27,6 @@ const Home = ({ user, vehicles }) => {
         })
 
         documentedCars++
-        // console.log('Cost: ',totalCost, ', at car no. ', documentedCars, ', Total services: ', jService);
     })
 
     if (!vehicles && documentedCars !== totalCars) {
@@ -67,7 +66,6 @@ const Home = ({ user, vehicles }) => {
                 Welcome back, {user?.username}. Here is an overview of your garage.
             </Text>
 
-            {/* Gutter adds spacing between columns [horizontal, vertical] */}
             <Row gutter={[16, 16]} className="dashboard-stats-row">
                 <Col xs={24} sm={8}>
                     <Card className="stat-card">
