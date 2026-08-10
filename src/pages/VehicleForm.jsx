@@ -135,7 +135,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     ]}
                 >
                     <InputNumber
-                        suffix="km" // addonAfter is deprecated
+                        suffix="km"
                         min={0}
                         step={1}
                         placeholder="0"
