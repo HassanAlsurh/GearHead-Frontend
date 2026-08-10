@@ -1,4 +1,4 @@
-import { useParams, useNavigate, data } from "react-router"
+import { useParams, useNavigate, Link } from "react-router"
 import { useState, useEffect } from "react"
 import * as vehicleservices from '../services/vehicles'
 import * as recordsServices from '../services/serviceRecords'
@@ -10,7 +10,7 @@ const VehicleDetails = () => {
 
     const [vehicle, setVehicle] = useState(null)
 
-    const [reset,setReset] = useState(0)
+    const [reset, setReset] = useState(0)
 
     useEffect(() => {
         const fetchVehicle = async () => {
@@ -66,18 +66,18 @@ const VehicleDetails = () => {
 
     const handleAddRecord = async (vehicleId, formData) => {
         await recordsServices.create(vehicleId, formData)
-        setReset(reset+1)
+        setReset(reset + 1)
     }
     const handleUpdateRecord = async (vehicleId, toEdit, formData) => {
         await recordsServices.update(vehicleId, toEdit, formData)
-        setReset(reset+1)
+        setReset(reset + 1)
     }
 
     const handleDelete = async () => {
         console.log('Delete');
-        await recordsServices.deleteRecord(vehicleId,toDelete)
+        await recordsServices.deleteRecord(vehicleId, toDelete)
         setToDelete(null)
-        setReset(reset+1)
+        setReset(reset + 1)
     }
 
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
@@ -86,6 +86,10 @@ const VehicleDetails = () => {
         <main>
             <div className="car-details">
                 <h1>{vehicle.make + ' ' + vehicle.model} </h1>
+
+                <Link to={`/vehicles/${vehicleId}/edit`}>
+                    <button>Edit {vehicle.make + ' ' + vehicle.model}</button>
+                </Link>
                 <button popovertarget="serviceForm">Create new Record</button>
 
                 <div popover='auto' id="serviceForm">

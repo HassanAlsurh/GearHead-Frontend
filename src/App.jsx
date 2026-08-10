@@ -50,6 +50,15 @@ const App = () => {
     navigate(`/vehicles/${vehicleId}`)
   }
 
+  const handleUpdateVehicle = async (vehicleId, formData) => {
+    const updatedVehicle = await vehicleServices.update(vehicleId, formData)
+    const updatedvehiclesList = vehicles.map((vehicle) => {
+      return vehicleId === vehicle._id ? updatedVehicle : vehicle
+    })
+    setVehicles(updatedvehiclesList)
+    navigate(`/vehicles/${vehicleId}`)
+  }
+
   return (
     <div>
       <Nav user={user} setUser={setUser} />
@@ -62,6 +71,7 @@ const App = () => {
               <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
               <Route path='/vehicles/:vehicleId' element={<VehicleDetails />} />
+              <Route path={`/vehicles/:vehicleId/edit`} element={<VehicleForm handleUpdateVehicle={handleUpdateVehicle}/>} />
             </>
           ) : (
             <>
