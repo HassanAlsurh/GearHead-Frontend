@@ -10,13 +10,15 @@ const VehicleDetails = () => {
 
     const [vehicle, setVehicle] = useState(null)
 
+    const [reset,setReset] = useState(0)
+
     useEffect(() => {
         const fetchVehicle = async () => {
             const vehicleData = await vehicleservices.show(vehicleId)
             setVehicle(vehicleData)
         }
         fetchVehicle()
-    }, [vehicleId])
+    }, [vehicleId, reset])
 
     const initialState = {
         date: '',
@@ -62,17 +64,20 @@ const VehicleDetails = () => {
 
     }
 
-    const handleAddRecord = (vehicleId, formData) => {
-        recordsServices.create(vehicleId, formData)
+    const handleAddRecord = async (vehicleId, formData) => {
+        await recordsServices.create(vehicleId, formData)
+        setReset(reset+1)
     }
-    const handleUpdateRecord = (vehicleId, toEdit, formData) => {
-        recordsServices.update(vehicleId, toEdit, formData)
+    const handleUpdateRecord = async (vehicleId, toEdit, formData) => {
+        await recordsServices.update(vehicleId, toEdit, formData)
+        setReset(reset+1)
     }
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         console.log('Delete');
-        recordsServices.deleteRecord(vehicleId,toDelete)
-
+        await recordsServices.deleteRecord(vehicleId,toDelete)
+        setToDelete(null)
+        setReset(reset+1)
     }
 
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
@@ -156,6 +161,7 @@ const VehicleDetails = () => {
                     vehicle.serviceRecords.map((service) => (
                         <div className="card" key={service._id}>
                             <h1>{service._id}</h1>
+                            <p>{service.category}</p>
                             <button popovertarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
                             <button popovertarget="confirmDelete" onClick={() => (setToDelete(service._id))}>Delete</button>
                         </div>
