@@ -29,6 +29,7 @@ const VehicleDetails = () => {
     const [formData, setFormData] = useState(initialState)
 
     const [toEdit, setToEdit] = useState(null)
+    const [toDelete, setToDelete] = useState(null)
 
     const handleSetFormData = (recordId) => {
         const valueOfRecord = vehicle.serviceRecords.find((currVehicle) => {
@@ -49,10 +50,8 @@ const VehicleDetails = () => {
         event.preventDefault()
 
         if (toEdit) {
-            // handleUpdateVehicle(vehicleId, formData)
             handleUpdateRecord(vehicleId, toEdit, formData)
         } else {
-            // handleAddVehicle(formData)
             handleAddRecord(vehicleId, formData)
         }
 
@@ -70,13 +69,19 @@ const VehicleDetails = () => {
         recordsServices.update(vehicleId, toEdit, formData)
     }
 
+    const handleDelete = () => {
+        console.log('Delete');
+        recordsServices.deleteRecord(vehicleId,toDelete)
+
+    }
+
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
 
     return (
         <main>
             <div className="car-details">
                 <h1>{vehicle.make + ' ' + vehicle.model} </h1>
-                <button popovertarget="serviceForm">trigger Popover</button>
+                <button popovertarget="serviceForm">Create new Record</button>
 
                 <div popover='auto' id="serviceForm">
                     <form onSubmit={handleSubmit}>
@@ -134,14 +139,26 @@ const VehicleDetails = () => {
                         <button type='submit'>SUBMIT</button>
                     </form>
                 </div>
+
+                <div popover='auto' id="confirmDelete">
+                    <h2>Are you sure you want to delete {toDelete}</h2>
+                    <div>
+                        <button onClick={handleDelete}>Confirm</button>
+                        <button popoverTarget="confirmDelete">Cancel</button>
+                    </div>
+                </div>
+
+
             </div>
+
             <div className="service-records">
                 {
                     vehicle.serviceRecords.map((service) => (
-                        <>
-                            <h1>a record</h1>
+                        <div className="card" key={service._id}>
+                            <h1>{service._id}</h1>
                             <button popovertarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
-                        </>
+                            <button popovertarget="confirmDelete" onClick={() => (setToDelete(service._id))}>Delete</button>
+                        </div>
                     ))
                 }
             </div>
