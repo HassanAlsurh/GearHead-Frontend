@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { show } from '../services/vehicles'
-const VehicleForm = ({handleUpdateVehicle, handleAddVehicle}) => {
+const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
     const { vehicleId } = useParams()
+
+    const currentYear = new Date().getFullYear();
+    const maxModelYear = currentYear + 1;
 
     const initialState = {
         year: undefined,
@@ -67,7 +70,7 @@ const VehicleForm = ({handleUpdateVehicle, handleAddVehicle}) => {
                 <input
                     required
                     min={1900}
-                    max={2027} //for now 
+                    max={maxModelYear}
                     type='number'
                     name='year'
                     id='year-input'
