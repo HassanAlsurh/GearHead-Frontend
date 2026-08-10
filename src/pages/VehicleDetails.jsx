@@ -2,7 +2,7 @@ import { useParams, useNavigate, Link } from "react-router"
 import { useState, useEffect } from "react"
 import * as vehicleservices from '../services/vehicles'
 import * as recordsServices from '../services/serviceRecords'
-const VehicleDetails = () => {
+const VehicleDetails = ({ handleDeleteVehicle }) => {
 
     const navigate = useNavigate()
 
@@ -80,6 +80,8 @@ const VehicleDetails = () => {
         setReset(reset + 1)
     }
 
+
+
     if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
 
     return (
@@ -90,6 +92,9 @@ const VehicleDetails = () => {
                 <Link to={`/vehicles/${vehicleId}/edit`}>
                     <button>Edit {vehicle.make + ' ' + vehicle.model}</button>
                 </Link>
+
+                <button onClick={() => (handleDeleteVehicle(vehicleId))}>Delete Vehicle</button>
+
                 <button popovertarget="serviceForm">Create new Record</button>
 
                 <div popover='auto' id="serviceForm">

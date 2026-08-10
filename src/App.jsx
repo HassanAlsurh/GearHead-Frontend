@@ -49,6 +49,13 @@ const App = () => {
     navigate(`/vehicles/${vehicleId}`)
   }
 
+  const handleDeleteVehicle = async (VehicleId) => {
+    // console.log('VehicleId: ', VehicleId) 
+    const deletedVehicle = await vehicleServices.deleteVehicle(VehicleId)
+    setVehicles(vehicles.filter((vehicle) => vehicle._id !== VehicleId))
+    navigate('/vehicles')
+  }
+
   return (
     <div>
       <Nav user={user} setUser={setUser} />
@@ -60,7 +67,7 @@ const App = () => {
               {/* Routes that only Signed in users can access */}
               <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
-              <Route path='/vehicles/:vehicleId' element={<VehicleDetails />} />
+              <Route path='/vehicles/:vehicleId' element={<VehicleDetails handleDeleteVehicle={handleDeleteVehicle}/>} />
               <Route path={`/vehicles/:vehicleId/edit`} element={<VehicleForm handleUpdateVehicle={handleUpdateVehicle}/>} />
             </>
           ) : (
