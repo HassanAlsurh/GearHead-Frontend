@@ -50,7 +50,6 @@ const App = () => {
   }
 
   const handleDeleteVehicle = async (VehicleId) => {
-    // console.log('VehicleId: ', VehicleId) 
     const deletedVehicle = await vehicleServices.deleteVehicle(VehicleId)
     setVehicles(vehicles.filter((vehicle) => vehicle._id !== VehicleId))
     navigate('/vehicles')
@@ -61,7 +60,7 @@ const App = () => {
       <Nav user={user} setUser={setUser} />
       <main className="app-main">
         <Routes>
-          <Route path='/' element={user ? <Home user={user} /> : <Landing />} />
+          <Route path='/' element={user ? <Home user={user} vehicles={vehicles} /> : <Landing />} />
           {user ? (
             <>
               {/* Routes that only Signed in users can access */}

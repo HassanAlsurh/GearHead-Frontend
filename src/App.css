@@ -104,8 +104,6 @@ button:disabled {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* From here are the Navbar css */
-
 .nav-header {
   display: flex;
   justify-content: space-between;
@@ -146,3 +144,32 @@ button:disabled {
   margin-left: 10px;
 }
 
+.dashboard-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-stats-row {
+  margin-top: 24px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
+
+.dashboard-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
