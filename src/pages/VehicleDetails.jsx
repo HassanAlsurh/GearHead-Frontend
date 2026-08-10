@@ -95,7 +95,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
 
                 <button onClick={() => (handleDeleteVehicle(vehicleId))}>Delete Vehicle</button>
 
-                <button popovertarget="serviceForm">Create new Record</button>
+                <button popoverTarget="serviceForm">Create new Record</button>
 
                 <div popover='auto' id="serviceForm">
                     <form onSubmit={handleSubmit}>
@@ -171,8 +171,8 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                         <div className="card" key={service._id}>
                             <h1>{service._id}</h1>
                             <p>{service.category}</p>
-                            <button popovertarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
-                            <button popovertarget="confirmDelete" onClick={() => (setToDelete(service._id))}>Delete</button>
+                            <button popoverTarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
+                            <button popoverTarget="confirmDelete" onClick={() => (setToDelete(service._id))}>Delete</button>
                         </div>
                     ))
                 }

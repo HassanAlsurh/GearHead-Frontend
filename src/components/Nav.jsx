@@ -10,8 +10,7 @@ const Nav = (props) => {
     return (
         <nav>
             <Link className="nav-brand" to="/">GearHead</Link>
-            { props.user ? (
-                // for signed in users
+            {props.user ? (
                 <ul>
                     <li>Welcome, {props.user.username}!</li>
 
@@ -19,13 +18,12 @@ const Nav = (props) => {
                     <li><Link to="/" onClick={handleSignOut}>Sign Out</Link></li>
                 </ul>
             ) : (
-                // for non signed in users
-            <ul>
-                <li><Link to='/'>Home</Link></li>
-                <li><Link to='/sign-up'>Sign Up</Link></li>
-                <li><Link to='/sign-in'>Sign In</Link></li>
-            </ul>
-            ) }
+                <ul>
+                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/sign-up'>Sign Up</Link></li>
+                    <li><Link to='/sign-in'>Sign In</Link></li>
+                </ul>
+            )}
         </nav>
     )
 }

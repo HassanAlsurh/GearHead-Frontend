@@ -2,105 +2,173 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { show } from '../services/vehicles'
 import * as vehicleService from '../services/vehicles'
+
+import { Alert, Button, Card, Form, Input, Select, InputNumber } from 'antd'
+
 const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
     const { vehicleId } = useParams()
+    const [form] = Form.useForm()
+
 
     const currentYear = new Date().getFullYear();
     const maxModelYear = currentYear + 1;
 
-    const initialState = {
-        year: undefined,
-        make: undefined,
-        model: undefined,
-        mileage: undefined,
-        image: undefined
-    }
-
-    const [formData, setFormData] = useState(initialState)
-
-    const handleChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value })
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-
-        if (vehicleId) {
-            handleUpdateVehicle(vehicleId, formData)
-        } else {
-            handleAddVehicle(formData)
-        }
-
-        setFormData(initialState)
-
-    }
+    const [errorMessage, setErrorMessage] = useState('')
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         const fetchVehicle = async () => {
-            const vehicleData = await vehicleService.show(vehicleId)
-            setFormData(vehicleData)
+            try {
+                const vehicleData = await vehicleService.show(vehicleId)
+                form.setFieldsValue(vehicleData)
+            } catch (error) {
+                setErrorMessage("Failed to load vehicle data.")
+            }
         }
+
         if (vehicleId) fetchVehicle()
-    }, [vehicleId])
+    }, [vehicleId, form])
+
+    const handleSubmit = (values) => {
+        setIsSubmitting(true)
+        setErrorMessage('')
+
+        try {
+            if (vehicleId) {
+                handleUpdateVehicle(vehicleId, values)
+            } else {
+                handleAddVehicle(values)
+            }
+
+            form.resetFields()
+
+        } catch (error) {
+            setErrorMessage(error.message)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
 
     return (
-        <main className='card'>
-            <h1>{vehicleId ? 'Edit Vehicle' : 'New Vehicle'}</h1>
 
-            <form onSubmit={handleSubmit}>
-                <label htmlFor='make-input'>Make</label>
-                <input
-                    required
-                    type='text'
-                    name='make'
-                    id='make-input'
-                    value={formData.make}
-                    onChange={handleChange}
-                />
-                <label htmlFor='model-input'>Model</label>
-                <input
-                    required
-                    type='text'
-                    name='model'
-                    id='model-input'
-                    value={formData.model}
-                    onChange={handleChange}
-                />
-                <label htmlFor='year-input'>Year</label>
-                <input
-                    required
-                    min={1900}
-                    max={maxModelYear}
-                    type='number'
-                    name='year'
-                    id='year-input'
-                    value={formData.year}
-                    onChange={handleChange}
-                />
-                <label htmlFor='mileage-input'>Mileage</label>
-                <input
-                    required
-                    min={0}
-                    type='number'
-                    name='mileage'
-                    id='mileage-input'
-                    value={formData.mileage}
-                    onChange={handleChange}
-                />
-                <label htmlFor='image-input'>Image</label>
-                <input
-                    type='text'
-                    name='image'
-                    id='image-input'
-                    value={formData.image}
-                    onChange={handleChange}
-                />
+        <Card title={vehicleId ? 'Edit Vehicle' : 'New Vehicle'} className="form-card" >
 
+            {errorMessage && (
+                <Alert
+                    type="error"
+                    showIcon
+                    title="Letter could not be sent"
+                    description={errorMessage}
+                    className="form-alert"
+                />
+            )}
+            <Form
+                form={form}
+                layout="vertical"
+                onFinish={handleSubmit}
+            >
 
-                <button type='submit'>SUBMIT</button>
-            </form>
-        </main>
+                <Form.Item
+                    label="Manufacturer"
+                    name="make"
+                    rules={[
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: 'Please enter the Manufacturer name',
+                        },
+                        {
+                            min: 2,
+                            message: 'Name must be at least 2 characters',
+                        },
+                    ]}
+                >
+                    <Input placeholder="TOYOTA" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Car Name"
+                    name="model"
+                    rules={[
+                        {
+                            required: true,
+                            whitespace: true,
+                            message: 'Please enter the Car name',
+                        },
+                        {
+                            min: 2,
+                            message: 'Name must be at least 2 characters',
+                        },
+                    ]}
+                >
+                    <Input placeholder="COROLLA" />
+                </Form.Item>
+
+                <Form.Item
+                    name="year"
+                    label="Year model"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter a Year!'
+                        }
+                    ]}
+                >
+                    <InputNumber
+                        min={1900}
+                        max={maxModelYear}
+                        step={1}
+                        placeholder={maxModelYear}
+                        style={{ width: '100%' }}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    name="mileage"
+                    label="Mileage"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter the car's Mileage!"
+                        }
+                    ]}
+                >
+                    <InputNumber
+                        addonAfter="km"
+                        min={0}
+                        step={1}
+                        placeholder="0"
+                        style={{ width: '100%' }}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Car Image"
+                    name="image"
+                    rules={[
+                        {
+                            url: true,
+                            whitespace: true,
+                        },
+                    ]}
+                >
+                    <Input placeholder="https://autos.hamariweb.com/images/carimages/AAev3BB.jpg" />
+                </Form.Item>
+
+                <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={isSubmitting}
+                    block
+                >
+                    Add Vehicle
+                </Button>
+
+            </Form>
+
+        </Card>
     )
 }
 

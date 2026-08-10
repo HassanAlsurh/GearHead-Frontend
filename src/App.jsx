@@ -67,8 +67,8 @@ const App = () => {
               {/* Routes that only Signed in users can access */}
               <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
-              <Route path='/vehicles/:vehicleId' element={<VehicleDetails handleDeleteVehicle={handleDeleteVehicle}/>} />
-              <Route path={`/vehicles/:vehicleId/edit`} element={<VehicleForm handleUpdateVehicle={handleUpdateVehicle}/>} />
+              <Route path='/vehicles/:vehicleId' element={<VehicleDetails handleDeleteVehicle={handleDeleteVehicle} />} />
+              <Route path={`/vehicles/:vehicleId/edit`} element={<VehicleForm handleUpdateVehicle={handleUpdateVehicle} />} />
             </>
           ) : (
             <>
