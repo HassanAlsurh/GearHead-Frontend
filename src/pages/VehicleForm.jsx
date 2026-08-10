@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import { show } from '../services/vehicles'
+import * as vehicleService from '../services/vehicles'
 const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
     const { vehicleId } = useParams()
@@ -37,7 +38,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
     useEffect(() => {
         const fetchVehicle = async () => {
-            const vehicleData = await hootService.show(vehicleId)
+            const vehicleData = await vehicleService.show(vehicleId)
             setFormData(vehicleData)
         }
         if (vehicleId) fetchVehicle()

@@ -42,20 +42,10 @@ const App = () => {
 
   const handleUpdateVehicle = async (vehicleId, formDate) => {
     const updatedVehicle = await vehicleServices.update(vehicleId, formDate)
-    //set the state with the new data of the vehicle!
     const updatedVehiclesList = vehicles.map((vehicle) => {
       return vehicleId === vehicle._id ? updatedVehicle : vehicle
     })
     setVehicles(updatedVehiclesList)
-    navigate(`/vehicles/${vehicleId}`)
-  }
-
-  const handleUpdateVehicle = async (vehicleId, formData) => {
-    const updatedVehicle = await vehicleServices.update(vehicleId, formData)
-    const updatedvehiclesList = vehicles.map((vehicle) => {
-      return vehicleId === vehicle._id ? updatedVehicle : vehicle
-    })
-    setVehicles(updatedvehiclesList)
     navigate(`/vehicles/${vehicleId}`)
   }
 
