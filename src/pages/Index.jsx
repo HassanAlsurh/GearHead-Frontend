@@ -5,7 +5,11 @@ import { PlusOutlined, DashboardOutlined, CalendarOutlined } from '@ant-design/i
 const { Title } = Typography
 const { Meta } = Card
 
+import errorImage from '../assets/images/carErrorImage.png'
+
 const Index = ({ vehicles, user }) => {
+
+    // const errorImage = '../assets/images/carErrorImage.png'
 
     return (
         <main className="dashboard-container">
@@ -38,6 +42,17 @@ const Index = ({ vehicles, user }) => {
                                 <Card
                                     hoverable
                                     className="vehicle-card-wrapper"
+                                    cover={
+                                        <div className="vehicle-card-image-container">
+                                            <img
+                                                alt={`${vehicle.make} ${vehicle.model}`}
+                                                src={vehicle.image || errorImage}
+                                                className="vehicle-card-image"
+
+                                                onError={(e) => { e.target.src = errorImage }}
+                                            />
+                                        </div>
+                                    }
                                 >
                                     <Meta
                                         title={`${vehicle.make} ${vehicle.model}`}
