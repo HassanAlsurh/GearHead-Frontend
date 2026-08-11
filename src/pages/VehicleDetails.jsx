@@ -53,6 +53,17 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
         setReset(reset + 1)
     }
 
+    const totalCost = () => {
+
+        const result = vehicle.serviceRecords.reduce((Acc, currService) => {
+            return Acc + currService.cost
+        }, 0)
+
+        console.log(result);
+        return result
+
+    }
+
     if (!vehicle) {
         return (
             <main className="dashboard-loader">
@@ -86,6 +97,8 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                                 </Title>
                                 <Text type="secondary" style={{ fontSize: '16px' }}>
                                     <CalendarOutlined /> {vehicle.year} &nbsp; | &nbsp; <DashboardOutlined /> {vehicle.mileage?.toLocaleString()} km
+                                    <br />
+                                    <CreditCardOutlined /> Total cost: BHD{totalCost().toLocaleString()} | <SettingOutlined /> Services: {vehicle.serviceRecords.length}
                                 </Text>
                             </div>
 
@@ -116,7 +129,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
 
             <div className="service-records-header">
                 <Title level={3} style={{ margin: 0 }}>Service History</Title>
-                <Button type="primary" icon={<PlusOutlined />} onClick={()=>(console.log('Creating mode'))}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={() => (console.log('Creating mode'))}>
                     Log Service
                 </Button>
             </div>
