@@ -86,7 +86,7 @@ const SignInForm = (props) => {
 
                 <div className="auth-footer">
                     <Text type="secondary">
-                        Don't have an account? <Link to="/sign-up" className="signUp-link"  >Sign up</Link>
+                        Don't have an account? <Link to="/sign-up" className="footer-link"  >Sign up</Link>
                     </Text>
                 </div>
             </Form>
