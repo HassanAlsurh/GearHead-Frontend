@@ -2,34 +2,27 @@ import { Link } from "react-router"
 import { Button, Card, Col, Row, Typography, Empty, Tag } from 'antd'
 import { PlusOutlined, DashboardOutlined, CalendarOutlined, CarryOutOutlined } from '@ant-design/icons'
 
+import errorImage from '../assets/images/carErrorImage.png'
+
 const { Title } = Typography
 const { Meta } = Card
 
-import errorImage from '../assets/images/carErrorImage.png'
-
 const Index = ({ vehicles, user }) => {
 
-    // const errorImage = '../assets/images/carErrorImage.png'
-
-    const largestMilage = (inputService) => {
-        console.log('input service: ', inputService);
+    const largestMileage = (inputService) => {
 
         if (inputService.length === 1) return inputService[0].mileageAtService
 
-        const result = inputService.reduce((maxMilage, currService) => {
-            console.log('curr service: ', currService);
 
-            return currService.mileageAtService > maxMilage.mileageAtService ? currService : maxMilage
-        }
-        )
-        console.log(result);
+        const result = inputService.reduce((maxMileage, currService) => {
+            return currService.mileageAtService > maxMileage.mileageAtService ? currService : maxMileage
+        })
+
         return result.mileageAtService
-
     }
 
     return (
         <main className="dashboard-container">
-
             <header className="dashboard-header-row">
                 <Title level={2} style={{ margin: 0 }}>
                     {user ? `${user.username}'s Garage` : 'My Garage'}
@@ -64,8 +57,10 @@ const Index = ({ vehicles, user }) => {
                                                 alt={`${vehicle.make} ${vehicle.model}`}
                                                 src={vehicle.image || errorImage}
                                                 className="vehicle-card-image"
-
-                                                onError={(e) => { e.target.src = errorImage }}
+                                                onError={(e) => {
+                                                    e.currentTarget.onerror = null;
+                                                    e.currentTarget.src = errorImage
+                                                }}
                                             />
                                         </div>
                                     }
@@ -80,17 +75,15 @@ const Index = ({ vehicles, user }) => {
                                                 <Tag icon={<DashboardOutlined />} color="purple">
                                                     {vehicle.mileage.toLocaleString()} km
                                                 </Tag>
-                                                {
-                                                    vehicle.serviceRecords?.length > 0 ? (
 
-                                                        // change the icon
-                                                        <Tag icon={<CarryOutOutlined />} color="yellow">
-                                                            latest service at {largestMilage(vehicle.serviceRecords).toLocaleString()} km
+                                                {
+                                                    vehicle.serviceRecords?.length > 0 && (
+                                                        <Tag icon={<CarryOutOutlined />} color="gold">
+                                                            Latest service at {largestMileage(vehicle.serviceRecords).toLocaleString()} km
                                                         </Tag>
-                                                    ) : (
-                                                        <></>
                                                     )
                                                 }
+
                                             </div>
                                         }
                                     />
