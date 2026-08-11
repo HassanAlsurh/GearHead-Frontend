@@ -1,185 +1,164 @@
 import { useParams, useNavigate, Link } from "react-router"
 import { useState, useEffect } from "react"
-import * as vehicleservices from '../services/vehicles'
+import * as vehicleServices from '../services/vehicles'
 import * as recordsServices from '../services/serviceRecords'
+import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Spin, Typography } from 'antd'
+import { EditOutlined, DeleteOutlined, PlusOutlined, DashboardOutlined, CalendarOutlined, CreditCardOutlined, SettingOutlined } from '@ant-design/icons'
+import errorImage from '../assets/images/carErrorImage.png'
+
+const { Title, Text, Paragraph } = Typography
+
 const VehicleDetails = ({ handleDeleteVehicle }) => {
-
     const navigate = useNavigate()
-
     const { vehicleId } = useParams()
 
-    const [vehicle, setVehicle] = useState(null)
+    const today = new Date().toISOString().split('T')[0];
 
+    const [vehicle, setVehicle] = useState(null)
     const [reset, setReset] = useState(0)
+
+    const [form] = Form.useForm()
+    const [toEditRecordId, settoEditRecordId] = useState(null)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         const fetchVehicle = async () => {
-            const vehicleData = await vehicleservices.show(vehicleId)
+            const vehicleData = await vehicleServices.show(vehicleId)
             setVehicle(vehicleData)
         }
         fetchVehicle()
     }, [vehicleId, reset])
 
-    const initialState = {
-        date: '',
-        category: 'Maintenance',
-        description: '',
-        cost: '',
-        mileageAtService: ''
-    }
 
-    const [formData, setFormData] = useState(initialState)
 
-    const [toEdit, setToEdit] = useState(null)
-    const [toDelete, setToDelete] = useState(null)
-
-    const handleSetFormData = (recordId) => {
-        const valueOfRecord = vehicle.serviceRecords.find((currVehicle) => {
-            return currVehicle._id === recordId
-        })
-
-        const formattedDate = valueOfRecord.date.split('T')[0];
-
-        setFormData({ ...valueOfRecord, date: formattedDate })
-        setToEdit(recordId)
-    }
-
-    const handleChange = (event) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value })
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-
-        if (toEdit) {
-            handleUpdateRecord(vehicleId, toEdit, formData)
-        } else {
-            handleAddRecord(vehicleId, formData)
+    const handleSubmit = async (values) => {
+        setIsSubmitting(true)
+        try {
+            if (toEditRecordId) {
+                await recordsServices.update(vehicleId, toEditRecordId, values)
+            } else {
+                await recordsServices.create(vehicleId, values)
+            }
+            setReset(reset + 1)
+            closeModal()
+        } catch (error) {
+            console.error("Failed to save service record:", error)
+        } finally {
+            setIsSubmitting(false)
         }
-
-        setFormData(initialState)
-        setToEdit(null)
-        console.log('formData: ', formData);
-        console.log('toEdit: ', toEdit);
-
     }
 
-    const handleAddRecord = async (vehicleId, formData) => {
-        await recordsServices.create(vehicleId, formData)
-        setReset(reset + 1)
-    }
-    const handleUpdateRecord = async (vehicleId, toEdit, formData) => {
-        await recordsServices.update(vehicleId, toEdit, formData)
+    const handleDeleteRecord = async (recordId) => {
+        await recordsServices.deleteRecord(vehicleId, recordId)
         setReset(reset + 1)
     }
 
-    const handleDelete = async () => {
-        console.log('Delete');
-        await recordsServices.deleteRecord(vehicleId, toDelete)
-        setToDelete(null)
-        setReset(reset + 1)
+    if (!vehicle) {
+        return (
+            <main className="dashboard-loader">
+                <Spin size="large" description="Loading vehicle details..." />
+            </main>
+        )
     }
-
-
-
-    if (!vehicle) return <main><div className="loader"> Vehicle details are loading... </div></main>
 
     return (
-        <main>
-            <div className="car-details">
-                <h1>{vehicle.make + ' ' + vehicle.model} </h1>
+        <main className="dashboard-container">
+            <Card className="vehicle-header-card">
+                <Row gutter={[24, 24]} align="middle">
 
-                <Link to={`/vehicles/${vehicleId}/edit`}>
-                    <button>Edit {vehicle.make + ' ' + vehicle.model}</button>
-                </Link>
-
-                <button onClick={() => (handleDeleteVehicle(vehicleId))}>Delete Vehicle</button>
-
-                <button popoverTarget="serviceForm">Create new Record</button>
-
-                <div popover='auto' id="serviceForm">
-                    <form onSubmit={handleSubmit}>
-                        <label htmlFor='date-input'>Date</label>
-                        <input
-                            required
-                            type='date'
-                            name='date'
-                            id='date-input'
-                            placeholder=""
-                            value={formData.date}
-                            onChange={handleChange}
+                    <Col xs={24} md={8} lg={6}>
+                        <img
+                            src={vehicle.image || errorImage}
+                            alt={`${vehicle.make} ${vehicle.model}`}
+                            className="vehicle-details-image"
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = errorImage
+                            }}
                         />
-                        <label htmlFor='category-input'>Category</label>
-                        <select
-                            required
-                            name='category'
-                            id='category-input'
-                            value={formData.category}
-                            onChange={handleChange}
-                        >
-                            <option value='Maintenance'>Maintenance</option>
-                            <option value='Repair'>Repair</option>
-                            <option value='Modification'>Modification</option>
-                            <option value='Detailing'>Detailing</option>
-                            <option value='Other'>Other</option>
-                        </select>
-                        <label htmlFor='description-input'>Description</label>
-                        <textarea
-                            required
-                            type='text'
-                            name='description'
-                            id='description-input'
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor='cost-input'>Cost</label>
-                        <input
-                            required
-                            type='number'
-                            name='cost'
-                            id='cost-input'
-                            value={formData.cost}
-                            onChange={handleChange}
-                        />
-                        <label htmlFor='mileageAtService-input'>Mileage At Service</label>
-                        <input
-                            required
-                            type='number'
-                            name='mileageAtService'
-                            id='mileageAtService-input'
-                            value={formData.mileageAtService}
-                            onChange={handleChange}
-                        />
-                        <button type='submit'>SUBMIT</button>
-                    </form>
-                </div>
+                    </Col>
 
-                <div popover='auto' id="confirmDelete">
-                    <h2>Are you sure you want to delete {toDelete}</h2>
-                    <div>
-                        <button onClick={handleDelete}>Confirm</button>
-                        <button popoverTarget="confirmDelete">Cancel</button>
-                    </div>
-                </div>
+                    <Col xs={24} md={16} lg={18}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                            <div>
+                                <Title level={2} style={{ margin: 0 }}>
+                                    {vehicle.make} {vehicle.model}
+                                </Title>
+                                <Text type="secondary" style={{ fontSize: '16px' }}>
+                                    <CalendarOutlined /> {vehicle.year} &nbsp; | &nbsp; <DashboardOutlined /> {vehicle.mileage?.toLocaleString()} km
+                                </Text>
+                            </div>
 
+                            <div>
+                                <Link to={`/vehicles/${vehicleId}/edit`}>
+                                    <Button icon={<EditOutlined />} style={{ marginRight: '8px' }}>
+                                        Edit Vehicle
+                                    </Button>
+                                </Link>
 
-            </div>
-
-            <div className="service-records">
-                {
-                    vehicle.serviceRecords.map((service) => (
-                        <div className="card" key={service._id}>
-                            <h1>{service._id}</h1>
-                            <p>{service.category}</p>
-                            <button popoverTarget="serviceForm" onClick={() => (handleSetFormData(service._id))}>Edit</button>
-                            <button popoverTarget="confirmDelete" onClick={() => (setToDelete(service._id))}>Delete</button>
+                                <Popconfirm
+                                    title="Delete this vehicle?"
+                                    description="This action cannot be undone."
+                                    onConfirm={() => handleDeleteVehicle(vehicleId)}
+                                    okText="Yes, Delete"
+                                    cancelText="Cancel"
+                                    okButtonProps={{ danger: true }}
+                                >
+                                    <Button danger icon={<DeleteOutlined />}>
+                                        Delete Vehicle
+                                    </Button>
+                                </Popconfirm>
+                            </div>
                         </div>
-                    ))
-                }
+                    </Col>
+                </Row>
+            </Card>
+
+            <div className="service-records-header">
+                <Title level={3} style={{ margin: 0 }}>Service History</Title>
+                <Button type="primary" icon={<PlusOutlined />} onClick={()=>(console.log('Creating mode'))}>
+                    Log Service
+                </Button>
             </div>
+
+            <Row gutter={[16, 16]}>
+                {vehicle.serviceRecords?.map((service) => (
+                    <Col xs={24} md={12} key={service._id}>
+                        <Card className="record-card">
+                            <Row justify="space-between" align="top">
+                                <Col span={16}>
+                                    <Text type="secondary">{service.date?.split('T')[0]}</Text>
+                                    <Title level={4} style={{ margin: '4px 0' }}>{service.category}</Title>
+                                    <Text type="secondary"><DashboardOutlined /> {service.mileageAtService?.toLocaleString()} km</Text>
+                                    <Paragraph style={{ marginTop: '12px', marginBottom: 0 }}>
+                                        {service.description}
+                                    </Paragraph>
+                                </Col>
+
+                                <Col span={8} style={{ textAlign: 'right' }}>
+                                    <div className="record-cost">BHD{service.cost}</div>
+                                    <div style={{ marginTop: '16px' }}>
+                                        <Button type="text" icon={<EditOutlined />} onClick={() => (console.log('Editting mode'))} />
+
+                                        <Popconfirm
+                                            title="Delete record?"
+                                            onConfirm={() => handleDeleteRecord(service._id)}
+                                            okText="Yes"
+                                            cancelText="No"
+                                        >
+                                            <Button type="text" danger icon={<DeleteOutlined />} />
+                                        </Popconfirm>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+
+
         </main>
     )
-
 }
 
 export default VehicleDetails
