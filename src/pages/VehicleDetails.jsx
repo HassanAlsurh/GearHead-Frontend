@@ -18,7 +18,8 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     const [reset, setReset] = useState(0)
 
     const [form] = Form.useForm()
-    const [toEditRecordId, settoEditRecordId] = useState(null)
+    const [isModalVisible, setIsModalVisible] = useState(false)
+    const [toEditRecordId, setToEditRecordId] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
@@ -29,7 +30,24 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
         fetchVehicle()
     }, [vehicleId, reset])
 
+    const openCreateModal = () => {
+        form.resetFields()
+        setToEditRecordId(null)
+        setIsModalVisible(true)
+    }
 
+    const openEditModal = (record) => {
+        const formattedDate = record.date.split('T')[0]
+        form.setFieldsValue({ ...record, date: formattedDate })
+        setToEditRecordId(record._id)
+        setIsModalVisible(true)
+    }
+
+    const closeModal = () => {
+        setIsModalVisible(false)
+        form.resetFields()
+        setToEditRecordId(null)
+    }
 
     const handleSubmit = async (values) => {
         setIsSubmitting(true)
@@ -67,7 +85,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     if (!vehicle) {
         return (
             <main className="dashboard-loader">
-                <Spin size="large" description="Loading vehicle details..." />
+                <Spin size="large" tip="Loading vehicle details..." />
             </main>
         )
     }
@@ -129,7 +147,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
 
             <div className="service-records-header">
                 <Title level={3} style={{ margin: 0 }}>Service History</Title>
-                <Button type="primary" icon={<PlusOutlined />} onClick={() => (console.log('Creating mode'))}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={openCreateModal}>
                     Log Service
                 </Button>
             </div>
@@ -151,7 +169,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                                 <Col span={8} style={{ textAlign: 'right' }}>
                                     <div className="record-cost">BHD{service.cost}</div>
                                     <div style={{ marginTop: '16px' }}>
-                                        <Button type="text" icon={<EditOutlined />} onClick={() => (console.log('Editting mode'))} />
+                                        <Button type="text" icon={<EditOutlined />} onClick={() => openEditModal(service)} />
 
                                         <Popconfirm
                                             title="Delete record?"
@@ -169,7 +187,72 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                 ))}
             </Row>
 
+            <Modal
+                title={toEditRecordId ? "Edit Service Record" : "New Service Record"}
+                open={isModalVisible}
+                onCancel={closeModal}
+                footer={null}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleSubmit}
+                    initialValues={{ category: 'Maintenance' }}
+                    style={{ marginTop: '24px' }}
+                >
+                    <Form.Item label="Date" name="date" rules={[{ required: true }]}>
+                        <Input type="date" max={today} defaultValue={today} />
+                    </Form.Item>
 
+                    <Form.Item label="Category" name="category" rules={[{ required: true }]}>
+                        <Select>
+                            <Select.Option value="Maintenance">Maintenance</Select.Option>
+                            <Select.Option value="Repair">Repair</Select.Option>
+                            <Select.Option value="Modification">Modification</Select.Option>
+                            <Select.Option value="Detailing">Detailing</Select.Option>
+                            <Select.Option value="Other">Other</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item label="Description" name="description" rules={[{ required: true }]}>
+                        <Input.TextArea rows={3} placeholder="What work was done?" />
+                    </Form.Item>
+
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item label="Cost" name="cost" rules={[{ required: true }]}>
+                                <InputNumber
+                                    prefix="BHD"
+                                    min={0}
+                                    step={5}
+                                    max={5000}
+                                    style={{ width: '100%' }}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="Mileage at Service" name="mileageAtService" rules={[{ required: true }]}>
+                                <InputNumber
+                                    suffix="km"
+                                    defaultValue={vehicle.mileage}
+                                    min={0}
+                                    max={vehicle.mileage}
+                                    style={{ width: '100%' }}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+
+                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+                        <Button onClick={closeModal} style={{ marginRight: '8px' }}>
+                            Cancel
+                        </Button>
+                        <Button type="primary" htmlType="submit" loading={isSubmitting}>
+                            {toEditRecordId ? "Update Record" : "Save Record"}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </main>
     )
 }
