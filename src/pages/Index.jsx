@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { Button, Card, Col, Row, Typography, Empty, Tag } from 'antd'
-import { PlusOutlined, DashboardOutlined, CalendarOutlined } from '@ant-design/icons'
+import { PlusOutlined, DashboardOutlined, CalendarOutlined, CarryOutOutlined } from '@ant-design/icons'
 
 const { Title } = Typography
 const { Meta } = Card
@@ -10,6 +10,22 @@ import errorImage from '../assets/images/carErrorImage.png'
 const Index = ({ vehicles, user }) => {
 
     // const errorImage = '../assets/images/carErrorImage.png'
+
+    const largestMilage = (inputService) => {
+        console.log('input service: ', inputService);
+
+        if (inputService.length === 1) return inputService[0].mileageAtService
+
+        const result = inputService.reduce((maxMilage, currService) => {
+            console.log('curr service: ', currService);
+
+            return currService.mileageAtService > maxMilage.mileageAtService ? currService : maxMilage
+        }
+        )
+        console.log(result);
+        return result.mileageAtService
+
+    }
 
     return (
         <main className="dashboard-container">
@@ -64,6 +80,17 @@ const Index = ({ vehicles, user }) => {
                                                 <Tag icon={<DashboardOutlined />} color="purple">
                                                     {vehicle.mileage.toLocaleString()} km
                                                 </Tag>
+                                                {
+                                                    vehicle.serviceRecords?.length > 0 ? (
+
+                                                        // change the icon
+                                                        <Tag icon={<CarryOutOutlined />} color="yellow">
+                                                            latest service at {largestMilage(vehicle.serviceRecords).toLocaleString()} km
+                                                        </Tag>
+                                                    ) : (
+                                                        <></>
+                                                    )
+                                                }
                                             </div>
                                         }
                                     />
