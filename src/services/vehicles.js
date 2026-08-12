@@ -33,6 +33,17 @@ const show = async (vehicleId) => {
   }
 }
 
+const sharedShow = async (vehicleId) => {
+  try {
+    const res = await fetch(`${BASE_URL}/shared/${vehicleId}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+    return res.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const create = async (vehicleFormData) => {
   try {
     const res = await fetch(BASE_URL, {
