@@ -2,7 +2,7 @@ import { useParams, useNavigate, Link } from "react-router"
 import { useState, useEffect } from "react"
 import * as vehicleServices from '../services/vehicles'
 import * as recordsServices from '../services/serviceRecords'
-import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Spin, Typography } from 'antd'
+import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Spin, Typography, Switch, List } from 'antd'
 import { EditOutlined, DeleteOutlined, PlusOutlined, DashboardOutlined, CalendarOutlined, CreditCardOutlined, SettingOutlined, UserAddOutlined } from '@ant-design/icons'
 import errorImage from '../assets/images/carErrorImage.png'
 
@@ -32,19 +32,16 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
         inviteForm.resetFields()
     }
     const openInviteModal = () => {
+
+        console.log(vehicle.sharedUsers);
+
         inviteForm.resetFields()
         setIsInviteModalVisible(true)
     }
     const handleInvite = async (values) => {
         setIsSubmittingInvite(true)
         try {
-            // if (toEditRecordId) {
-            //     await recordsServices.update(vehicleId, toEditRecordId, values)
-            // } else {
-            //     await recordsServices.create(vehicleId, values)
-            // }
             await vehicleServices.invite(vehicleId, values)
-
             setReset(reset + 1)
             closeInviteModal()
         } catch (error) {
@@ -53,6 +50,15 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
             setIsSubmittingInvite(false)
         }
     }
+
+    const handleUninvite = async (username) => {
+        try {
+            await vehicleServices.deleteInvite(vehicleId, { username });
+            setReset(reset + 1);
+        } catch (error) {
+            console.error("Failed to uninvite user:", error);
+        }
+    };
 
     useEffect(() => {
         const fetchVehicle = async () => {
@@ -288,7 +294,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
             </Modal>
 
             <Modal
-                title='Invite a User'
+                title='Manage Access'
                 open={isInviteModalVisible}
                 onCancel={closeInviteModal}
                 footer={null}
@@ -299,34 +305,23 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                     onFinish={handleInvite}
                     style={{ marginTop: '24px' }}
                 >
-
-
                     <Form.Item
-                        label="Username"
+                        label="Invite a New User"
                         name="username"
                         rules={[
-                            {
-                                required: true,
-                                whitespace: true,
-                                message: 'Please enter a username',
-                            },
-                            {
-                                min: 2,
-                                message: 'Name must be at least 2 characters',
-                            },
+                            { required: true, whitespace: true, message: 'Please enter a username' },
+                            { min: 2, message: 'Name must be at least 2 characters' },
                         ]}
                     >
-                        <Input placeholder="enter a username" />
+                        <Input placeholder="Enter a username to invite" />
                     </Form.Item>
 
-
-
-                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+                    <Form.Item style={{ textAlign: 'right' }}>
                         <Button onClick={closeInviteModal} style={{ marginRight: '8px' }}>
                             Cancel
                         </Button>
                         <Button type="primary" htmlType="submit" loading={isSubmittingInvite}>
-                            Invite user
+                            Invite User
                         </Button>
                     </Form.Item>
                 </Form>

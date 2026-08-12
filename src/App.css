@@ -369,3 +369,41 @@ button:disabled {
   height: 160px;
   object-fit: cover;
 }
+
+.shared-users-container {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.shared-users-label {
+    display: block;
+    font-size: 14px;
+    color: #8c8c8c;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.shared-users-list {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 8px;
+    border: 1px solid #f0f0f0;
+}
+
+.shared-user-item {
+    border-bottom: none !important; 
+    padding: 12px 16px !important;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.shared-user-item:hover {
+    background-color: #f0f2f5; 
+}
+
+.shared-user-name {
+    color: #262626;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+}
