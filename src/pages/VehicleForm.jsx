@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router'
 import * as vehicleService from '../services/vehicles'
 
-import { Alert, Button, Card, Form, Input, Select, InputNumber } from 'antd'
+import { Alert, Button, Card, Form, Input, Select, InputNumber, Upload } from 'antd'
+import { UploadOutlined } from '@ant-design/icons'
 
 const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
@@ -15,6 +16,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
 
     const [errorMessage, setErrorMessage] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [fileList, setFileList] = useState([])
 
     useEffect(() => {
         const fetchVehicle = async () => {
@@ -32,12 +34,21 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
     const handleSubmit = (values) => {
         setIsSubmitting(true)
         setErrorMessage('')
+        const submitData = new FormData()
+        submitData.append('make', values.make)
+        submitData.append('model', values.model)
+        submitData.append('year', values.year)
+        submitData.append('mileage', values.mileage)
+        if (fileList.length > 0) {
+            const fileToUpload = fileList[0].originFileObj || fileList[0];
+            submitData.append('image', fileToUpload);
+        }
 
         try {
             if (vehicleId) {
-                handleUpdateVehicle(vehicleId, values)
+                handleUpdateVehicle(vehicleId, submitData)
             } else {
-                handleAddVehicle(values)
+                handleAddVehicle(submitData)
             }
 
             form.resetFields()
@@ -143,17 +154,17 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    label="Car Image"
-                    name="image"
-                    rules={[
-                        {
-                            url: true,
-                            whitespace: true,
-                        },
-                    ]}
-                >
-                    <Input placeholder="https://autos.hamariweb.com/images/carimages/AAev3BB.jpg" />
+                <Form.Item label="Car Image">
+                    <Upload
+                        accept="image/*"
+                        maxCount={1}
+                        listType="picture"
+                        beforeUpload={() => false}
+                        onChange={({ fileList: newFileList }) => setFileList(newFileList)}
+                        fileList={fileList}
+                    >
+                        <Button icon={<UploadOutlined />}>Select Image</Button>
+                    </Upload>
                 </Form.Item>
 
                 <Button
