@@ -8,7 +8,6 @@ const signUp = async (formData) => {
             body: JSON.stringify(formData)
         })
         const data = await res.json()
-        console.log(data)
 
         if (data.err) {
             console.log(data.err)

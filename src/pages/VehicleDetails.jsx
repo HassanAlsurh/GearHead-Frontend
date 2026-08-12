@@ -72,20 +72,16 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     }
 
     const totalCost = () => {
-
         const result = vehicle.serviceRecords.reduce((Acc, currService) => {
             return Acc + currService.cost
         }, 0)
-
-        console.log(result);
         return result
-
     }
 
     if (!vehicle) {
         return (
             <main className="dashboard-loader">
-                <Spin size="large" tip="Loading vehicle details..." />
+                <Spin size="large" description="Loading vehicle details..." />
             </main>
         )
     }
