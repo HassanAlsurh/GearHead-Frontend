@@ -326,14 +326,39 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                     </Form.Item>
                 </Form>
 
-                {
-                    vehicle.sharedUsers.map((user)=>(
-                        <>
-                        <h1>{user.username}</h1>
-                        <button onClick={()=>(handleUninvite(user.username))}>revoke access</button>
-                        </>
-                    ))
-                }
+                {vehicle.sharedUsers && vehicle.sharedUsers.length > 0 && (
+                    <div className="shared-users-container">
+                        <span className="shared-users-label">
+                            Currently Shared With:
+                        </span>
+                        <List
+                            size="small"
+                            dataSource={vehicle.sharedUsers}
+                            className="shared-users-list"
+                            renderItem={(sharedUser) => (
+                                <List.Item
+                                    className="shared-user-item"
+                                    actions={[
+                                        <Switch
+                                            defaultChecked
+                                            checkedChildren="Access"
+                                            unCheckedChildren="Revoked"
+                                            onChange={(checked) => {
+                                                if (!checked) {
+                                                    handleUninvite(sharedUser.username);
+                                                }
+                                            }}
+                                        />
+                                    ]}
+                                >
+                                    <Text className="shared-user-name">
+                                        {sharedUser.username}
+                                    </Text>
+                                </List.Item>
+                            )}
+                        />
+                    </div>
+                )}
             </Modal>
         </main>
     )
