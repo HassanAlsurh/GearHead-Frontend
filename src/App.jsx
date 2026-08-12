@@ -34,14 +34,14 @@ const App = () => {
     if (user) fetchAllVehicles()
   }, [user])
 
-  const handleAddVehicle = async (formDate) => {
-    const newVehicle = await vehicleServices.create(formDate)
+  const handleAddVehicle = async (formData) => {
+    const newVehicle = await vehicleServices.create(formData)
     setVehicles([...vehicles, newVehicle])
     navigate('/vehicles')
   }
 
-  const handleUpdateVehicle = async (vehicleId, formDate) => {
-    const updatedVehicle = await vehicleServices.update(vehicleId, formDate)
+  const handleUpdateVehicle = async (vehicleId, formData) => {
+    const updatedVehicle = await vehicleServices.update(vehicleId, formData)
     const updatedVehiclesList = vehicles.map((vehicle) => {
       return vehicleId === vehicle._id ? updatedVehicle : vehicle
     })

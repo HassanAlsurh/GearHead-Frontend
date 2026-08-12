@@ -28,9 +28,8 @@ const create = async (vehicleFormData) => {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(vehicleFormData),
+      body: vehicleFormData,
     })
     return res.json()
   } catch (error) {
@@ -38,15 +37,14 @@ const create = async (vehicleFormData) => {
   }
 }
 
-async function update(vehicleId, vehicleFormData) {
+const update = async (vehicleId, vehicleFormData) => {
   try {
     const res = await fetch(`${BASE_URL}/${vehicleId}`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(vehicleFormData),
+      body: vehicleFormData,
     })
     return res.json()
   } catch (error) {
