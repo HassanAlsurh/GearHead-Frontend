@@ -55,7 +55,7 @@ const Index = ({ vehicles, user }) => {
                                         <div className="vehicle-card-image-container">
                                             <img
                                                 alt={`${vehicle.make} ${vehicle.model}`}
-                                                src={vehicle.image || errorImage}
+                                                src={vehicle.image?.url || errorImage}
                                                 className="vehicle-card-image"
                                                 onError={(e) => {
                                                     e.currentTarget.onerror = null;

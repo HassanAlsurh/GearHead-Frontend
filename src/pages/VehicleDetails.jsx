@@ -97,7 +97,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
 
                     <Col xs={24} md={8} lg={6}>
                         <img
-                            src={vehicle.image || errorImage}
+                            src={vehicle.image?.url || errorImage}
                             alt={`${vehicle.make} ${vehicle.model}`}
                             className="vehicle-details-image"
                             onError={(e) => {
