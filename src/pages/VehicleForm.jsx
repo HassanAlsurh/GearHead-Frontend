@@ -17,12 +17,17 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
     const [errorMessage, setErrorMessage] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [fileList, setFileList] = useState([])
+    const [previewImage, setPreviewImage] = useState('')
 
     useEffect(() => {
         const fetchVehicle = async () => {
             try {
                 const vehicleData = await vehicleService.show(vehicleId)
                 form.setFieldsValue(vehicleData)
+
+                if (vehicleData.image?.url) {
+                    setPreviewImage(vehicleData.image.url)
+                }
             } catch (error) {
                 setErrorMessage("Failed to load vehicle data.")
             }
@@ -52,7 +57,8 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
             }
 
             form.resetFields()
-
+            setFileList([])
+            setPreviewImage('')
         } catch (error) {
             setErrorMessage(error.message)
         } finally {
@@ -166,6 +172,15 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                         <Button icon={<UploadOutlined />}>Select Image</Button>
                     </Upload>
                 </Form.Item>
+
+                {previewImage ? (
+                    <div>
+                        <img
+                            src={previewImage}
+                            alt={`Preview of vehicles' old image`}
+                        />
+                    </div>
+                ) : (<></>)}
 
                 <Button
                     type="primary"
