@@ -1,6 +1,6 @@
 import { Link } from "react-router"
 import { Button, Space, Typography } from 'antd'
-
+import logo from '../assets/images/logo.png'
 const { Title, Paragraph } = Typography;
 
 const Landing = () => {
@@ -8,7 +8,7 @@ const Landing = () => {
         <main className="landing-wrapper">
             <div className="landing-card">
 
-                {/* a logo here would be good and to the navbar too */}
+                <img src={logo} alt="GearHead Logo" className="landing-logo" />
 
                 <Title level={1} className="landing-title">
                     Welcome to <span className="landing-brand-text">GearHead</span>

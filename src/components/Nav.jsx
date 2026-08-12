@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router"
 import { Layout, Button, Space, Typography, Dropdown, Avatar } from 'antd'
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
-
+import logo from '../assets/images/logo.png'
 const { Header } = Layout;
 const { Title } = Typography;
 
@@ -37,9 +37,12 @@ const Nav = (props) => {
     return (
         <Header className="nav-header">
             <Link to="/" className="nav-brand-link">
-                <Title level={3} className="nav-brand-title">
-                    GearHead
-                </Title>
+                <div className="nav-brand-container">
+                    <img src={logo} alt="GearHead Logo" className="nav-brand-logo" />
+                    <Title level={3} className="nav-brand-title">
+                        GearHead
+                    </Title>
+                </div>
             </Link>
 
             <Space size="large">

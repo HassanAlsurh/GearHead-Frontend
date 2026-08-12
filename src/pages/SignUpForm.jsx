@@ -2,6 +2,7 @@ import { useNavigate, Link } from "react-router"
 import { useState } from "react"
 import { signUp } from "../services/auth"
 import { Alert, Button, Card, Form, Input, Typography } from 'antd'
+import logo from '../assets/images/logo.png'
 
 const { Title, Text } = Typography;
 
@@ -31,7 +32,7 @@ const SignUpForm = (props) => {
         <Card className="form-card">
             <div className="auth-header">
 
-                {/* Logo ? */}
+                <img src={logo} alt="GearHead Logo" className="auth-logo" />
 
                 <Title level={2} className="auth-title">Create an Account</Title>
                 <Text type="secondary">Join GearHead to manage your garage.</Text>

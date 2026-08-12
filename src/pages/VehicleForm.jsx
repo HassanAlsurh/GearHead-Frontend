@@ -154,6 +154,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     <InputNumber
                         suffix="km"
                         min={0}
+                        max={1000000}
                         step={1}
                         placeholder="0"
                         style={{ width: '100%' }}

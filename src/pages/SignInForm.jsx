@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router"
 import { useState } from "react"
 import { signIn } from "../services/auth"
-
 import { Alert, Button, Card, Form, Input, Typography } from 'antd'
+import logo from '../assets/images/logo.png'
 
 const { Title, Text } = Typography;
 
@@ -32,7 +32,7 @@ const SignInForm = (props) => {
         <Card className="form-card">
             <div className="auth-header">
 
-                {/* Logo here too? */}
+                <img src={logo} alt="GearHead Logo" className="auth-logo" />
 
                 <Title level={2} className="auth-title">Welcome Back</Title>
                 <Text type="secondary">Please enter your details to sign in.</Text>
