@@ -53,6 +53,17 @@ const Nav = (props) => {
                                 My Garage
                             </Button>
                         </Link>
+                        {
+                            props.sharedVehicles.length > 0 && (
+
+
+                                <Link to="/vehicles/shared">
+                                    <Button type="text" size="large" className="nav-garage-btn">
+                                        Shared Garage
+                                    </Button>
+                                </Link>
+                            )
+                        }
 
                         <Dropdown menu={{ items: userMenuItems }} placement="bottomLeft" trigger={['click']}>
                             <Avatar

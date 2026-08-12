@@ -10,7 +10,8 @@ import './App.css'
 import Index from "./pages/Index"
 import * as vehicleServices from './services/vehicles'
 import VehicleDetails from "./pages/vehicleDetails"
-
+import SharedIndex from "./pages/SharedIndex"
+import SharedVehicleDetails from "./pages/SharedVehicleDetails"
 
 const getUserFromToken = () => {
   const token = localStorage.getItem('token')
@@ -61,14 +62,17 @@ const App = () => {
 
   return (
     <div>
-      <Nav user={user} setUser={setUser} />
+      <Nav user={user} setUser={setUser} sharedVehicles={sharedVehicles}  />
       <main className="app-main">
         <Routes>
           <Route path='/' element={user ? <Home user={user} vehicles={vehicles} /> : <Landing />} />
           {user ? (
             <>
-              {/* Routes that only Signed in users can access */}
               <Route path='/vehicles' element={<Index vehicles={vehicles} />} />
+              <Route path='/vehicles/shared' element={<SharedIndex sharedVehicles={sharedVehicles} />} />
+
+              <Route path='/vehicles/shared/:vehicleId' element={<SharedVehicleDetails sharedVehicles={sharedVehicles} />} />
+              
               <Route path='/vehicles/new' element={<VehicleForm handleAddVehicle={handleAddVehicle} handleUpdateVehicle={handleUpdateVehicle} />} />
               <Route path='/vehicles/:vehicleId' element={<VehicleDetails handleDeleteVehicle={handleDeleteVehicle} />} />
               <Route path={`/vehicles/:vehicleId/edit`} element={<VehicleForm handleUpdateVehicle={handleUpdateVehicle} />} />
