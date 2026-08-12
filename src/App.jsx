@@ -30,6 +30,8 @@ const App = () => {
     const fetchAllVehicles = async () => {
       const vehiclesData = await vehicleServices.index()
       setVehicles(vehiclesData)
+
+      // const sharedVehicles = await vehicleServices
     }
     if (user) fetchAllVehicles()
   }, [user])

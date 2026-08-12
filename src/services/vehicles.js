@@ -11,6 +11,17 @@ const index = async () => {
   }
 }
 
+const sharedIndex = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/shared`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    })
+    return res.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const show = async (vehicleId) => {
   try {
     const res = await fetch(`${BASE_URL}/${vehicleId}`, {
