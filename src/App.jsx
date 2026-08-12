@@ -9,7 +9,7 @@ import VehicleForm from "./pages/VehicleForm"
 import './App.css'
 import Index from "./pages/Index"
 import * as vehicleServices from './services/vehicles'
-import VehicleDetails from "./pages/vehicleDetails"
+import VehicleDetails from "./pages/VehicleDetails"
 import SharedIndex from "./pages/SharedIndex"
 import SharedVehicleDetails from "./pages/SharedVehicleDetails"
 
