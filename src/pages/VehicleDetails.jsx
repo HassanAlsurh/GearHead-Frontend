@@ -151,7 +151,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
 
                             <div>
                                 <Button icon={<UserAddOutlined />} onClick={openInviteModal} style={{ marginRight: '8px' }}>
-                                    Invite a user
+                                    Invite a user ({vehicle.sharedUsers.length})
                                 </Button>
 
                                 <Link to={`/vehicles/${vehicleId}/edit`}>
