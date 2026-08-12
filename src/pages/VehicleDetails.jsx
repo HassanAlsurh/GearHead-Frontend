@@ -325,6 +325,15 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                         </Button>
                     </Form.Item>
                 </Form>
+
+                {
+                    vehicle.sharedUsers.map((user)=>(
+                        <>
+                        <h1>{user.username}</h1>
+                        <button onClick={()=>(handleUninvite(user.username))}>revoke access</button>
+                        </>
+                    ))
+                }
             </Modal>
         </main>
     )
