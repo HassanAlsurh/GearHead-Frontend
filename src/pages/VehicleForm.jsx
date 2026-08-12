@@ -160,7 +160,7 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                     />
                 </Form.Item>
 
-                <Form.Item label="Car Image">
+                <Form.Item label="Car Image" style={{ marginBottom: 0 }}>
                     <Upload
                         accept="image/*"
                         maxCount={1}
@@ -169,16 +169,19 @@ const VehicleForm = ({ handleUpdateVehicle, handleAddVehicle }) => {
                         onChange={({ fileList: newFileList }) => setFileList(newFileList)}
                         fileList={fileList}
                     >
-                        <Button icon={<UploadOutlined />}>Select Image</Button>
+                        <Button icon={<UploadOutlined />}>{vehicleId ? 'Change Image' : 'Select Image'}</Button>
                     </Upload>
                 </Form.Item>
-
-                {previewImage ? (
-                    <div>
-                        <img
-                            src={previewImage}
-                            alt={`Preview of vehicles' old image`}
-                        />
+                {previewImage && fileList.length === 0 ? (
+                    <div className="preview-wrapper">
+                        <span className="preview-label">Currently saved image:</span>
+                        <div className="preview-container">
+                            <img
+                                src={previewImage}
+                                alt={`Preview of vehicles' old image`}
+                                className="preview-image"
+                            />
+                        </div>
                     </div>
                 ) : (<></>)}
 

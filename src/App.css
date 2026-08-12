@@ -307,7 +307,7 @@ button:disabled {
 .record-cost {
   font-size: 1.25rem;
   font-weight: bold;
-  color: #d61919; 
+  color: #d61919;
 }
 
 .vehicle-details-image {
@@ -316,4 +316,34 @@ button:disabled {
   object-fit: cover;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-wrapper {
+    margin-top: 12px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.preview-label {
+    font-size: 13px;
+    color: #8c8c8c;
+    margin-bottom: 6px;
+}
+
+.preview-container {
+    display: inline-block;
+    border: 1px solid #d9d9d9;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.preview-image {
+    display: block;
+    width: 100%;
+    max-width: 280px; 
+    height: 160px;
+    object-fit: cover;
 }
