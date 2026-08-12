@@ -93,5 +93,7 @@ export {
   show,
   create,
   deleteVehicle,
-  update
+  update,
+  sharedIndex,
+  sharedShow
 }

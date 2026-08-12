@@ -25,13 +25,15 @@ const App = () => {
 
   const [user, setUser] = useState(getUserFromToken())
   const [vehicles, setVehicles] = useState([])
+  const [sharedVehicles, setSharedVehicles] = useState([])
 
   useEffect(() => {
     const fetchAllVehicles = async () => {
       const vehiclesData = await vehicleServices.index()
       setVehicles(vehiclesData)
 
-      // const sharedVehicles = await vehicleServices
+      const sharedVehiclesData = await vehicleServices.sharedIndex()
+      setSharedVehicles(sharedVehiclesData)
     }
     if (user) fetchAllVehicles()
   }, [user])

@@ -21,6 +21,34 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [toEditRecordId, setToEditRecordId] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
+    
+    const [isSubmittingInvite, setIsSubmittingInvite] = useState(false)
+    const [isInviteModalVisible, setIsInviteModalVisible] = useState(false)
+
+    const closeInviteModal = () => {
+        setIsInviteModalVisible(false)
+        form.resetFields()
+    }
+    const openInviteModal = () => {
+        form.resetFields()
+        setIsInviteModalVisible(true)
+    }
+        const handleInvite = async (values) => {
+        isSubmittingInvite(true)
+        try {
+            // if (toEditRecordId) {
+            //     await recordsServices.update(vehicleId, toEditRecordId, values)
+            // } else {
+            //     await recordsServices.create(vehicleId, values)
+            // }
+            setReset(reset + 1)
+            closeInviteModal()
+        } catch (error) {
+            console.error("Failed to invite user:", error)
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
 
     useEffect(() => {
         const fetchVehicle = async () => {
@@ -48,6 +76,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
         form.resetFields()
         setToEditRecordId(null)
     }
+
 
     const handleSubmit = async (values) => {
         setIsSubmitting(true)
@@ -117,6 +146,10 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                             </div>
 
                             <div>
+                                <Button icon={<EditOutlined />} onClick={openInviteModal} style={{ marginRight: '8px' }}>
+                                    Invite a user
+                                </Button>
+
                                 <Link to={`/vehicles/${vehicleId}/edit`}>
                                     <Button icon={<EditOutlined />} style={{ marginRight: '8px' }}>
                                         Edit Vehicle
@@ -245,6 +278,51 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                         </Button>
                         <Button type="primary" htmlType="submit" loading={isSubmitting}>
                             {toEditRecordId ? "Update Record" : "Save Record"}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+            <Modal
+                title='Invite a USer'
+                open={isInviteModalVisible}
+                onCancel={closeInviteModal}
+                footer={null}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleInvite}
+                    style={{ marginTop: '24px' }}
+                >
+
+
+                    <Form.Item
+                        label="Username"
+                        name="username"
+                        rules={[
+                            {
+                                required: true,
+                                whitespace: true,
+                                message: 'Please enter a username',
+                            },
+                            {
+                                min: 2,
+                                message: 'Name must be at least 2 characters',
+                            },
+                        ]}
+                    >
+                        <Input placeholder="enter a username" />
+                    </Form.Item>
+
+
+
+                    <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+                        <Button onClick={closeInviteModal} style={{ marginRight: '8px' }}>
+                            Cancel
+                        </Button>
+                        <Button type="primary" htmlType="submit" loading={isSubmittingInvite}>
+                            Invite user
                         </Button>
                     </Form.Item>
                 </Form>
