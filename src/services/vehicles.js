@@ -88,6 +88,22 @@ const deleteVehicle = async (vehicleId) => {
   }
 }
 
+const invite = async (vehicleId, formData) => {
+  try {
+    const res = await fetch(`${BASE_URL}/${vehicleId}/invite`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    return res.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export {
   index,
   show,
@@ -95,5 +111,6 @@ export {
   deleteVehicle,
   update,
   sharedIndex,
-  sharedShow
+  sharedShow,
+  invite
 }

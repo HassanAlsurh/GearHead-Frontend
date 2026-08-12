@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import * as vehicleServices from '../services/vehicles'
 import * as recordsServices from '../services/serviceRecords'
 import { Button, Card, Col, Form, Input, InputNumber, Modal, Popconfirm, Row, Select, Spin, Typography } from 'antd'
-import { EditOutlined, DeleteOutlined, PlusOutlined, DashboardOutlined, CalendarOutlined, CreditCardOutlined, SettingOutlined } from '@ant-design/icons'
+import { EditOutlined, DeleteOutlined, PlusOutlined, DashboardOutlined, CalendarOutlined, CreditCardOutlined, SettingOutlined, UserAddOutlined } from '@ant-design/icons'
 import errorImage from '../assets/images/carErrorImage.png'
 
 const { Title, Text, Paragraph } = Typography
@@ -17,36 +17,40 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     const [vehicle, setVehicle] = useState(null)
     const [reset, setReset] = useState(0)
 
-    const [form] = Form.useForm()
+    const [serviceForm] = Form.useForm()
+    const [inviteForm] = Form.useForm()
+
     const [isModalVisible, setIsModalVisible] = useState(false)
     const [toEditRecordId, setToEditRecordId] = useState(null)
     const [isSubmitting, setIsSubmitting] = useState(false)
-    
+
     const [isSubmittingInvite, setIsSubmittingInvite] = useState(false)
     const [isInviteModalVisible, setIsInviteModalVisible] = useState(false)
 
     const closeInviteModal = () => {
         setIsInviteModalVisible(false)
-        form.resetFields()
+        inviteForm.resetFields()
     }
     const openInviteModal = () => {
-        form.resetFields()
+        inviteForm.resetFields()
         setIsInviteModalVisible(true)
     }
-        const handleInvite = async (values) => {
-        isSubmittingInvite(true)
+    const handleInvite = async (values) => {
+        setIsSubmittingInvite(true)
         try {
             // if (toEditRecordId) {
             //     await recordsServices.update(vehicleId, toEditRecordId, values)
             // } else {
             //     await recordsServices.create(vehicleId, values)
             // }
+            await vehicleServices.invite(vehicleId, values)
+
             setReset(reset + 1)
             closeInviteModal()
         } catch (error) {
             console.error("Failed to invite user:", error)
         } finally {
-            setIsSubmitting(false)
+            setIsSubmittingInvite(false)
         }
     }
 
@@ -59,21 +63,21 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
     }, [vehicleId, reset])
 
     const openCreateModal = () => {
-        form.resetFields()
+        serviceForm.resetFields()
         setToEditRecordId(null)
         setIsModalVisible(true)
     }
 
     const openEditModal = (record) => {
         const formattedDate = record.date.split('T')[0]
-        form.setFieldsValue({ ...record, date: formattedDate })
+        serviceForm.setFieldsValue({ ...record, date: formattedDate })
         setToEditRecordId(record._id)
         setIsModalVisible(true)
     }
 
     const closeModal = () => {
         setIsModalVisible(false)
-        form.resetFields()
+        serviceForm.resetFields()
         setToEditRecordId(null)
     }
 
@@ -146,7 +150,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                             </div>
 
                             <div>
-                                <Button icon={<EditOutlined />} onClick={openInviteModal} style={{ marginRight: '8px' }}>
+                                <Button icon={<UserAddOutlined />} onClick={openInviteModal} style={{ marginRight: '8px' }}>
                                     Invite a user
                                 </Button>
 
@@ -223,7 +227,7 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
                 footer={null}
             >
                 <Form
-                    form={form}
+                    form={serviceForm}
                     layout="vertical"
                     onFinish={handleSubmit}
                     initialValues={{ category: 'Maintenance' }}
@@ -284,13 +288,13 @@ const VehicleDetails = ({ handleDeleteVehicle }) => {
             </Modal>
 
             <Modal
-                title='Invite a USer'
+                title='Invite a User'
                 open={isInviteModalVisible}
                 onCancel={closeInviteModal}
                 footer={null}
             >
                 <Form
-                    form={form}
+                    form={inviteForm}
                     layout="vertical"
                     onFinish={handleInvite}
                     style={{ marginTop: '24px' }}
